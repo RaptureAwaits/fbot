@@ -1,4 +1,4 @@
-CREATE TABLE users_template (
+CREATE TABLE users (
     id INTEGER PRIMARY KEY,
     username TEXT NOT NULL,
     credit INTEGER NOT NULL,

@@ -1,4 +1,4 @@
-CREATE TABLE logs_template (
+CREATE TABLE pins (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     author_id INTEGER NOT NULL,
     message_id INTEGER NOT NULL,

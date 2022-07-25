@@ -1,4 +1,4 @@
-CREATE TABLE logs_template (
+CREATE TABLE logs (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     clock DATE NOT NULL,
     severity TEXT NOT NULL,
