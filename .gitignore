@@ -1,6 +1,6 @@
-*.db
-fbotvenv/
-data/secrets.py
+config/
+instance/
+logs/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

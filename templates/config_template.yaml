@@ -1,0 +1,21 @@
+info:
+  guild:      !!int 0
+channels:
+  bot:        !!int 0
+  pin:        !!int 0
+roles:
+  privileged: !!int 0
+emoji:
+  upvote:     !!int 0
+  downvote:   !!int 0
+milestones:
+  first:      !!str (Objective completed) Press F to pay respects..
+  after:
+  - number:   !!int 1
+    message:  !!str Respects have been paid <x> times.
+  - number:   !!int 100
+    message:  !!str Another hundred in the bag. <u> has paid the <x>th respect.
+  - number:   !!int 1000
+    message:  !!str Who could possibly have this much respect??? <u> has paid the <x>th respect, and must surely be tired by now.
+  - number:   !!int 10000
+    message:  !!str That's enough, <u>.
