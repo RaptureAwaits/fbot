@@ -59,7 +59,7 @@ class Users(FbotBase):
 
     @staticmethod
     @db_action
-    def create_user(user_id: int, db_session: Session = None) -> Self:
+    def create_user(user_id: int, db_session: Session = None) -> "Users":
         new_user = Users(uid=user_id)
         db_session.add(new_user)
         return new_user

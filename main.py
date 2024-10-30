@@ -2,8 +2,6 @@ from src.setup import setup_required
 if setup_required:
     exit()
 
-import re
-
 from datetime import datetime, timedelta
 
 import discord
@@ -50,6 +48,8 @@ async def on_message(message: Message):
         return
 
     server_config: ServerConfig = server_configs.get(message.guild.id)
+    if not server_config:
+        return
 
     if message.content.lower() == "f":
         user: Users = Users.get_user(message.author.id, server_config=server_config)
@@ -64,6 +64,8 @@ async def on_message(message: Message):
 @client.event
 async def on_reaction_add(reaction: Reaction, user: Member):
     server_config: ServerConfig = server_configs.get(reaction.message.guild.id)
+    if not server_config:
+        return
     # if (
     #     reaction.message.channel == server_config.pin_channel and  # Reaction is to a message in pin channel
     #     reaction.message.author == client.user and  # Reaction is to a bot message (all pins are bot msgs)
@@ -75,6 +77,8 @@ async def on_reaction_add(reaction: Reaction, user: Member):
 @client.event
 async def on_raw_reaction_add(payload: RawReactionActionEvent):
     server_config: ServerConfig = server_configs.get(payload.guild_id)
+    if not server_config:
+        return
     # await server_config.pin_channel.send(
     #     f"Sorry {payload.member.mention}, you were too slow on that one!",
     #     delete_after=30
@@ -92,12 +96,16 @@ async def uptime(context: commands.Context):
 async def credit(context: commands.Context):
     # Display user's social credit rating and a leaderboard
     server_config: ServerConfig = server_configs.get(context.guild.id)
+    if not server_config:
+        return
 
 
 @client.command()
 async def respects(context: commands.Context):
     # Display a breakdown of Fs by user
     server_config: ServerConfig = server_configs.get(context.guild.id)
+    if not server_config:
+        return
 
 
 @client.command()
