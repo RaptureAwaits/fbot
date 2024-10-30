@@ -26,7 +26,7 @@ intents = discord.Intents(
     reactions=True
 )
 
-client = commands.Bot(command_prefix='%', intents=intents)
+client = commands.Bot(command_prefix='f.', intents=intents)
 server_configs: dict[int: ServerConfig]
 start_time: datetime | None = None
 
@@ -51,7 +51,7 @@ async def on_message(message: Message):
 
     server_config: ServerConfig = server_configs.get(message.guild.id)
 
-    if re.match(r"\s*f\s*", message.content):
+    if re.match(r"\s*f\s*[^.]]", message.content):
         user: Users = Users.get_user(message.author.id, server_config=server_config)
         user.create_f(server_config=server_config)
         await server_config.bot_channel.send(get_f_message(
