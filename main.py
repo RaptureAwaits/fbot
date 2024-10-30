@@ -51,12 +51,14 @@ async def on_message(message: Message):
 
     server_config: ServerConfig = server_configs.get(message.guild.id)
 
-    if re.match(r"\s*f\s*[^.]]", message.content):
+    if message.content.lower() == "f":
         user: Users = Users.get_user(message.author.id, server_config=server_config)
         user.create_f(server_config=server_config)
         await server_config.bot_channel.send(get_f_message(
             F.get_total_f(server_config=server_config), message.author, server_config)
         )
+
+    await client.process_commands(message)
 
 
 @client.event
