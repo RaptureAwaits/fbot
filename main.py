@@ -107,6 +107,13 @@ async def respects(context: commands.Context):
     if not server_config:
         return
 
+    db_user: Users = Users.get_user(context.message.author.id, server_config=server_config)
+    response_str = (
+        f"You, {context.message.author.mention}, have paid **{db_user.get_user_f(server_config=server_config)}** " +
+        f"out of **{F.get_total_f(server_config=server_config)}** total respects."
+    )
+    await context.channel.send(response_str)
+
 
 @client.command()
 async def source(context: commands.Context):
