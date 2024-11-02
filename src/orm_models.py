@@ -130,7 +130,7 @@ class F(FbotBase):
 
 
 class Pins(FbotBase):
-    __tablename__ = "pins"
+    __tablename__ = TableNames.Pin
 
     uid: Mapped[int] = mapped_column("message_id", primary_key=True, nullable=False)
 

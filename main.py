@@ -58,7 +58,10 @@ async def on_message(message: Message):
             F.get_total_f(server_config=server_config), message.author, server_config)
         )
 
-    await client.process_commands(message)
+    try:
+        await client.process_commands(message)
+    except commands.CommandNotFound:
+        pass
 
 
 @client.event
