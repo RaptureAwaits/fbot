@@ -3,7 +3,7 @@ from discord.ext.commands import Cog, command, Context
 
 from datetime import datetime, timedelta
 
-from src.constants import APP_NAME, SOURCE_URL
+from src.constants import APP_NAME, SOURCE_ICON, SOURCE_URL
 from src.extensions import AlertEmbed
 
 start_time = datetime.now()
@@ -17,13 +17,14 @@ class MiscCog(Cog, name="Miscellaneous"):
 
     @command("source")
     async def source_command(self, context: Context):
-        source_str = "Feeling curious...?"
+        source_str = f"Feeling curious...?\n{SOURCE_URL}"
         source_embed = AlertEmbed(
             title=f"{APP_NAME} Source Code",
             description=source_str,
             url=SOURCE_URL,
             msg=context.message
         )
+        source_embed.set_thumbnail(url=SOURCE_ICON)
         await source_embed.send(context.channel)
 
     @command("uptime")

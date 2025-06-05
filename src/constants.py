@@ -4,6 +4,7 @@ from os.path import join as os_join
 APP_NAME = "fbot"
 
 ROOT_DIR = dirname(dirname(__file__))
+ASSET_DIR = os_join(ROOT_DIR, "assets")
 CONFIG_DIR = os_join(ROOT_DIR, "config")
 INSTANCE_DIR = os_join(ROOT_DIR, "instance")
 LOG_DIR = os_join(ROOT_DIR, "logs")
@@ -17,5 +18,6 @@ TOKEN_FILEPATH = os_join(ROOT_DIR, TOKEN_FILENAME)
 TOKEN_TEMPLATE = os_join(TEMPLATE_DIR, "token_template.yaml")
 
 SOURCE_URL = "https://github.com/RaptureAwaits/fbot"
+SOURCE_ICON = "https://avatars.githubusercontent.com/u/39350770"
 
 DEFAULT_DELETE_TIMER = 10
