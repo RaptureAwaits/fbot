@@ -55,11 +55,6 @@ class F(Cog):
                 Fs.get_total_f(server_config=server_config), message.author, server_config)
             )
 
-        try:
-            await self.client.process_commands(message)
-        except CommandNotFound:
-            pass
-
     @command("respects")
     async def respects_command(self, context: Context):
         # Display a breakdown of Fs by user

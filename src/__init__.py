@@ -2,12 +2,11 @@ from src.setup import setup_required
 if setup_required:
     exit()
 
-from datetime import datetime
-
-import discord
+from discord import Intents, Message
 from discord.ext.commands import (
     Bot,
     Cog,
+    CommandNotFound
 )
 from typing import Type
 
@@ -21,7 +20,7 @@ from src.modules.f import F
 from src.modules.misc import Misc
 from src.modules.pins import Pins
 
-intents = discord.Intents(
+intents = Intents(
     guilds=True,
     members=True,
     messages=True,
@@ -33,13 +32,8 @@ client = Bot(command_prefix='f.', intents=intents)
 server_configs = None
 
 
-def _add_cog(cog: Type[Cog]):
-    client.add_cog(cog(client, server_configs))
-
-
-_add_cog(F)
-_add_cog(Misc)
-_add_cog(Pins)
+async def _add_cog(cog: Type[Cog]):
+    await client.add_cog(cog(client, server_configs))
 
 
 @client.event
@@ -48,9 +42,22 @@ async def on_ready():
     global server_configs
     server_configs = ServerConfig.load_configs(client)
 
+    logger.info("Registering cogs...")
+    await _add_cog(F)
+    await _add_cog(Misc)
+    await _add_cog(Pins)
+
     logger.info("Loading server emoji...")
     for sc in server_configs.values():
         sc: ServerConfig
         await sc.load_emoji()
 
     logger.info(f"{APP_NAME} online. Listening...")
+
+
+@client.event
+async def on_message(message: Message):
+    try:
+        await client.process_commands(message)
+    except CommandNotFound:
+        pass
