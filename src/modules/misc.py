@@ -9,7 +9,7 @@ from src.extensions import AlertEmbed
 start_time = datetime.now()
 
 
-class MiscCog(Cog):
+class MiscCog(Cog, name="Miscellaneous"):
     colour = Colour.darker_gray()
 
     def __init__(self, *args, **kwargs):

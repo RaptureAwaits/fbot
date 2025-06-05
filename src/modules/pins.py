@@ -10,7 +10,7 @@ from src.models import Pins, Users
 start_time = datetime.now()
 
 
-class PinsCog(Cog):
+class PinsCog(Cog, name="Pins"):
     colour = Colour.gold()
 
     def __init__(self, client, server_configs):

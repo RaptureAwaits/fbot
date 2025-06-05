@@ -31,7 +31,7 @@ def get_f_message(f: int, user: Member, server_config: ServerConfig) -> str:
             return parse_f_message(server_config.milestones.get(m), f=f, user=user)
 
 
-class FCog(Cog):
+class FCog(Cog, name="F"):
     colour = Colour.fuchsia()
 
     def __init__(self, client, server_config):
@@ -65,7 +65,7 @@ class FCog(Cog):
         fs = db_user.get_user_f(server_config=server_config)
 
         response_str = (
-            f"You, {context.message.author.display_name}, have paid **{fs}** " +
+            f"You have paid **{fs}** " +
             f"out of **{Fs.get_total_f(server_config=server_config)}** total respects."
         )
         response_embed = Embed(
