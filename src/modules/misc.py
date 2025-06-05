@@ -21,7 +21,8 @@ class Misc(Cog):
         source_embed = AlertEmbed(
             title=f"{APP_NAME} Source Code",
             description=source_str,
-            url=SOURCE_URL
+            url=SOURCE_URL,
+            msg=context.message
         )
         await source_embed.send(context.channel)
 
@@ -32,5 +33,6 @@ class Misc(Cog):
         uptime_embed = AlertEmbed(
             title=f"{APP_NAME} Uptime Report",
             description=uptime_str,
+            msg=context.message
         )
         await uptime_embed.send(context.channel)
