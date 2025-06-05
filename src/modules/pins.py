@@ -49,7 +49,7 @@ class Pins(Cog):
             title="Message Pinned!",
             description=pin_alert_str
         )
-        await reaction.message.send(embed=pin_alert_embed)
+        await pin_alert_embed.send(reaction.message.channel)
 
     @Cog.listener("on_raw_reaction_add")
     async def missed_pin_listener(self, payload: RawReactionActionEvent):
@@ -62,7 +62,7 @@ class Pins(Cog):
             title="Pin Failed!",
             description=fail_str
         )
-        await server_config.pin_channel.send(embed=fail_embed)
+        await fail_embed.send(server_config.pin_channel)
 
     @Cog.listener("on_reaction_add")
     async def pin_vote_listener(self, reaction: Reaction, user: Member):
