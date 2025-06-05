@@ -5,7 +5,7 @@ from discord import Client, Emoji, Guild, Role, TextChannel
 from sqlalchemy import create_engine, Engine
 
 from src.constants import CONFIG_DIR, INSTANCE_DIR, ROOT_DIR
-from src.orm_models import FbotBase
+from src.models import FbotBase
 from src.logger import logger
 
 token_path = os.path.join(ROOT_DIR, "token.yaml")
@@ -44,6 +44,7 @@ class ServerConfig:
         return server_configs
 
     async def load_emoji(self) -> None:
+        self.pin_symbol = await self.guild.fetch_emoji(self.raw_config["emoji"]["pin"])
         self.upvote = await self.guild.fetch_emoji(self.raw_config["emoji"]["upvote"])
         self.downvote = await self.guild.fetch_emoji(self.raw_config["emoji"]["downvote"])
 
@@ -64,6 +65,7 @@ class ServerConfig:
         self.mod_role: Role = self.get_role(cfg_yaml["roles"]["privileged"])
 
         # Vote symbols
+        self.pin_symbol: Emoji | None = None
         self.upvote: Emoji | None = None
         self.downvote: Emoji | None = None
 

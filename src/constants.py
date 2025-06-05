@@ -16,3 +16,4 @@ TOKEN_FILENAME = "token.yaml"
 TOKEN_FILEPATH = os_join(ROOT_DIR, TOKEN_FILENAME)
 TOKEN_TEMPLATE = os_join(TEMPLATE_DIR, "token_template.yaml")
 
+SOURCE_URL = "https://github.com/RaptureAwaits/fbot"

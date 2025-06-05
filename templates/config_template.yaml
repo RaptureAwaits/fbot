@@ -6,6 +6,7 @@ channels:
 roles:
   privileged: !!int 0
 emoji:
+  pin:        !!int 0
   upvote:     !!int 0
   downvote:   !!int 0
 milestones:

@@ -52,7 +52,7 @@ class Users(FbotBase):
 
     is_muted: Mapped[bool] = mapped_column("is_muted", nullable=False, default=False)
 
-    fs: Mapped[list["F"]] = relationship()
+    fs: Mapped[list["Fs"]] = relationship()
     pins: Mapped[list["Pins"]] = relationship(foreign_keys="Pins.author_id")
     pinned_messages: Mapped[list["Pins"]] = relationship(foreign_keys="Pins.pinned_by_id")
     votes: Mapped[list["Votes"]] = relationship()
@@ -75,13 +75,13 @@ class Users(FbotBase):
     @db_action
     def get_user_f(self, db_session: Session = None) -> int:
         user_f: int = len(
-            db_session.query(F).filter(F.user == self).all()
+            db_session.query(Fs).filter(Fs.user == self).all()
         )
         return user_f
 
     @db_action
     def create_f(self, db_session: Session = None) -> Self:
-        new_f = F(user_id=self.uid)
+        new_f = Fs(user_id=self.uid)
         db_session.add(new_f)
         return new_f
 
@@ -111,7 +111,7 @@ class Users(FbotBase):
         return new_pin
 
 
-class F(FbotBase):
+class Fs(FbotBase):
     __tablename__ = TableNames.F
 
     uid: Mapped[int] = mapped_column("uid", primary_key=True, autoincrement=True, nullable=False)
@@ -132,7 +132,7 @@ class F(FbotBase):
 class Pins(FbotBase):
     __tablename__ = TableNames.Pin
 
-    uid: Mapped[int] = mapped_column("message_id", primary_key=True, nullable=False)
+    uid: Mapped[int] = mapped_column("message_id", primary_key=True, nullable=False, unique=True)
 
     timestamp: Mapped[datetime] = mapped_column("timestamp", default=datetime.now())
     message_text: Mapped[str] = mapped_column("text", nullable=False)
