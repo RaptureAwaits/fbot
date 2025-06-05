@@ -16,9 +16,9 @@ from src.modules.f import get_f_message
 from src.logger import logger
 from src.models import Users, Fs
 
-from src.modules.f import F
-from src.modules.misc import Misc
-from src.modules.pins import Pins
+from src.modules.f import FCog
+from src.modules.misc import MiscCog
+from src.modules.pins import PinsCog
 
 intents = Intents(
     guilds=True,
@@ -43,9 +43,9 @@ async def on_ready():
     server_configs = ServerConfig.load_configs(client)
 
     logger.info("Registering cogs...")
-    await _add_cog(F)
-    await _add_cog(Misc)
-    await _add_cog(Pins)
+    await _add_cog(FCog)
+    await _add_cog(MiscCog)
+    await _add_cog(PinsCog)
 
     logger.info("Loading server emoji...")
     for sc in server_configs.values():

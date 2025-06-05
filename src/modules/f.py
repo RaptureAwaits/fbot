@@ -10,7 +10,6 @@ from discord import (
 from discord.ext.commands import (
     Cog,
     command,
-    CommandNotFound,
     Context
 )
 
@@ -32,7 +31,7 @@ def get_f_message(f: int, user: Member, server_config: ServerConfig) -> str:
             return parse_f_message(server_config.milestones.get(m), f=f, user=user)
 
 
-class F(Cog):
+class FCog(Cog):
     colour = Colour.fuchsia()
 
     def __init__(self, client, server_config):
@@ -66,11 +65,11 @@ class F(Cog):
         fs = db_user.get_user_f(server_config=server_config)
 
         response_str = (
-            f"You, {context.message.author.mention}, have paid **{fs}** " +
+            f"You, {context.message.author.display_name}, have paid **{fs}** " +
             f"out of **{Fs.get_total_f(server_config=server_config)}** total respects."
         )
         response_embed = Embed(
-            title=f"{context.message.author.mention}'s Respects Report: {fs}",
+            title=f"{context.message.author.display_name}'s Respects Report: {fs}",
             colour=self.colour,
             description=response_str
         )

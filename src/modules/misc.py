@@ -1,4 +1,4 @@
-from discord import Colour, Embed
+from discord import Colour
 from discord.ext.commands import Cog, command, Context
 
 from datetime import datetime, timedelta
@@ -9,7 +9,7 @@ from src.extensions import AlertEmbed
 start_time = datetime.now()
 
 
-class Misc(Cog):
+class MiscCog(Cog):
     colour = Colour.darker_gray()
 
     def __init__(self, *args, **kwargs):

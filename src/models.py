@@ -149,6 +149,12 @@ class Pins(FbotBase):
 
     votes: Mapped[list["Votes"]] = relationship()
 
+    @classmethod
+    @db_action
+    def is_pinned(cls, message_id: int, db_session: Session) -> Self | None:
+        result = db_session.query(cls).filter(cls.uid == message_id).first()
+        return result or None
+
 
 class Votes(FbotBase):
     __tablename__ = TableNames.Vote

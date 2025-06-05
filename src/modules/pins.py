@@ -1,20 +1,20 @@
-from discord import Colour, Embed, Member, RawReactionActionEvent, Reaction
-from discord.ext.commands import Cog
+from discord import Colour, Embed, Member, RawReactionActionEvent, Reaction, User
+from discord.ext.commands import Bot, Cog
 
 from datetime import datetime
 
 from src.config import ServerConfig
 from src.extensions import AlertEmbed
-from src.models import Users
+from src.models import Pins, Users
 
 start_time = datetime.now()
 
 
-class Pins(Cog):
+class PinsCog(Cog):
     colour = Colour.gold()
 
     def __init__(self, client, server_configs):
-        self.client = client
+        self.client: Bot = client
         self.configs = server_configs
 
     @Cog.listener("on_reaction_add")
@@ -23,33 +23,56 @@ class Pins(Cog):
         if not server_config:
             return
 
+        if not server_config.pin_channel:
+            return
+
         if reaction.emoji != server_config.pin_symbol:
             return
 
-        db_user: Users = Users.get_user(user.id)
+        if user.id == reaction.message.author.id:
+            self_pin_alert_str = (
+                f"Tsk tsk. No self-pinning, {user.mention}."
+            )
+            self_pin_embed = AlertEmbed(
+                title="Pin Failed - No Self-pinning!",
+                description=self_pin_alert_str,
+            )
+            return await self_pin_embed.send(reaction.message.channel)
+
+        if (existing_pin := Pins.is_pinned(reaction.message.id, server_config=server_config)) is not None:
+            existing_pin: Pins
+            pinner: User = self.client.get_user(existing_pin.pinned_by_id)
+            duplicate_alert_str = (
+                f"Sorry {user.mention}, this message has already been pinned by {pinner.display_name}!"
+            )
+            duplicate_alert_embed = AlertEmbed(
+                title="Pin Failed - Message Already Pinned!",
+                description=duplicate_alert_str,
+            )
+            return await duplicate_alert_embed.send(reaction.message.channel)
+
+        db_user: Users = Users.get_user(user.id, server_config=server_config)
         db_user.create_pin(
             reaction.message.id,
             reaction.message.content,
-            reaction.message.author.id
+            reaction.message.author.id,
+            server_config=server_config
         )
 
-        pin_title = f"{reaction.message.author.mention} said:"
-        pin_embed = Embed(
-            title=pin_title,
-            colour=self.colour,
-            description=reaction.message.content
+        pin_str = (
+            f"**{reaction.message.author.mention} said: **\n" +
+            f'"{reaction.message.content}"'
         )
+        pin_embed = Embed(
+            title="Message Pinned!",
+            colour=self.colour,
+            description=pin_str,
+        )
+        pin_embed.set_thumbnail(url=reaction.message.author.display_avatar.url)
+        pin_embed.set_footer(text=f"Pinned by {user.display_name}", icon_url=user.display_avatar.url)
         pin_message = await server_config.pin_channel.send(embed=pin_embed)
 
-        pin_alert_str = (
-            f"{user.mention} has pinned a message from {reaction.message.author.mention}, check it out:\n" +
-            f"{pin_message.to_reference()}"
-        )
-        pin_alert_embed = AlertEmbed(
-            title="Message Pinned!",
-            description=pin_alert_str
-        )
-        await pin_alert_embed.send(reaction.message.channel)
+        await pin_message.forward(reaction.message.channel)
 
     @Cog.listener("on_raw_reaction_add")
     async def missed_pin_listener(self, payload: RawReactionActionEvent):
@@ -57,17 +80,32 @@ class Pins(Cog):
         if not server_config:
             return
 
-        fail_str = f"Sorry {payload.member.mention}, you were too slow on that one!",
+        if not server_config.pin_channel:
+            return
+
+        if payload.emoji != server_config.pin_symbol:
+            return
+
+        cached_ids = {m.id for m in self.client.cached_messages}
+        if payload.message_id in cached_ids:
+            return  # Better be quick on the draw
+
+        fail_str = f"Sorry {payload.member.mention}, you were too slow on that one!"
         fail_embed = AlertEmbed(
-            title="Pin Failed!",
-            description=fail_str
+            title="Pin Failed - Message Not Cached!",
+            description=fail_str,
         )
-        await fail_embed.send(server_config.pin_channel)
+
+        channel = self.client.get_channel(payload.channel_id)
+        await fail_embed.send(channel)
 
     @Cog.listener("on_reaction_add")
     async def pin_vote_listener(self, reaction: Reaction, user: Member):
         server_config: ServerConfig = self.configs.get(reaction.message.guild.id)
         if not server_config:
+            return
+
+        if not server_config.pin_channel:
             return
 
         if (
