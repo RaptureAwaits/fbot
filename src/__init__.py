@@ -30,9 +30,7 @@ intents = discord.Intents(
 )
 
 client = Bot(command_prefix='f.', intents=intents)
-
-server_configs = ServerConfig.load_configs(client)
-start_time = datetime.now()
+server_configs = None
 
 
 def _add_cog(cog: Type[Cog]):
@@ -46,6 +44,10 @@ _add_cog(Pins)
 
 @client.event
 async def on_ready():
+    logger.info("Loading server configs...")
+    global server_configs
+    server_configs = ServerConfig.load_configs(client)
+
     logger.info("Loading server emoji...")
     for sc in server_configs.values():
         sc: ServerConfig
